@@ -10,6 +10,7 @@ return array(
     'Zwijn\\Monolog\\' => array($vendorDir . '/nvanheuverzwijn/monolog-logdna/src/Monolog'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Twilio\\' => array($vendorDir . '/twilio/sdk/Twilio'),
+    'Pusher\\' => array($vendorDir . '/pusher/pusher-php-server/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),

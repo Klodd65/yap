@@ -1,5 +1,6 @@
 <?php
     include 'functions.php';
+    require __DIR__ . '/vendor/autoload.php';
     header("content-type: text/xml");
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
@@ -22,6 +23,19 @@
                 <?php
                 exit();
             }
+
+            $options = array(
+                'cluster' => 'us2',
+                'useTLS' => true
+            );
+            $pusher = new Pusher\Pusher(
+                $GLOBALS['pusher_auth_key'],
+                $GLOBALS['pusher_secret'],
+                $GLOBALS['pusher_app_id'],
+                $options
+            );
+
+            $pusher->trigger('yap-viz', 'helpline-search', $coordinates);
         }
         $location    = $service_body_obj->name;
         $dial_string = $service_body_obj->helpline;
