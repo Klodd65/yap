@@ -1,5 +1,4 @@
 <?php
-    include 'config.php';
     include 'functions.php';
     require_once 'vendor/autoload.php';
     use Twilio\Rest\Client;

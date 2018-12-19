@@ -2,10 +2,11 @@
 include_once 'config.php';
 include_once 'logging.php';
 include_once 'session.php';
-static $version = "2.5.1";
+static $version = "2.5.2";
 static $settings_whitelist = [
     'blocklist' => [ 'description' => '' , 'default' => '', 'overridable' => true],
     'bmlt_root_server' => [ 'description' => '' , 'default' => '', 'overridable' => false],
+    'config' => [ 'description' => '' , 'default' => '', 'overridable' => true],
     'custom_query' => ['description' => '', 'default' => '&sort_results_by_distance=1&long_val={LONGITUDE}&lat_val={LATITUDE}&geo_width={SETTING_MEETING_SEARCH_RADIUS}&weekdays={DAY}', 'overridable' => true],
     'fallback_number' => [ 'description' => '' , 'default' => '', 'overridable' => true],
     'gather_hints' => [ 'description' => '' , 'default' => '', 'overridable' => true],
@@ -38,6 +39,10 @@ static $settings_whitelist = [
     'word_language' => [ 'description' => '' , 'default' => 'en-US', 'overridable' => true],
 ];
 checkBlacklist();
+if (has_setting('config')) {
+    include_once 'config_'.setting('config').'.php';
+}
+
 static $available_languages = [
     "en-US" => "English",
     "pig-latin" => "Igpay Atinlay",
@@ -153,7 +158,8 @@ class MeetingResultSort {
 
 class NoVolunteersException extends Exception {}
 
-class UpgradeAdvisor {
+class UpgradeAdvisor
+{
     private static $all_good = true;
     private static $settings = [
         'title',
@@ -181,15 +187,18 @@ class UpgradeAdvisor {
         'smtp_from_name'
     ];
 
-    private static function isThere($setting) {
+    private static function isThere($setting)
+    {
         return isset($GLOBALS[$setting]) && strlen($GLOBALS[$setting]) > 0;
     }
 
-    private static function getState($status, $message) {
-        return ["status"=>$status, "message"=>$message];
+    private static function getState($status, $message)
+    {
+        return ["status" => $status, "message" => $message];
     }
 
-    public static function getStatus() {
+    public static function getStatus()
+    {
         foreach (UpgradeAdvisor::$settings as $setting) {
             if (!UpgradeAdvisor::isThere($setting)) {
                 return UpgradeAdvisor::getState(false, "Missing required setting: " . $setting);
@@ -199,7 +208,7 @@ class UpgradeAdvisor {
         $root_server_settings = json_decode(get(getHelplineBMLTRootServer() . "/client_interface/json/?switcher=GetServerInfo"));
 
         if (strpos(getHelplineBMLTRootServer(), 'index.php')) {
-            return UpgradeAdvisor::getState(false,"Your root server points to index.php. Please make sure to set it to just the root directory.");
+            return UpgradeAdvisor::getState(false, "Your root server points to index.php. Please make sure to set it to just the root directory.");
         }
 
         if (!isset($root_server_settings)) {
@@ -213,13 +222,13 @@ class UpgradeAdvisor {
         $googleapi_settings = json_decode(get($GLOBALS['google_maps_endpoint'] . "&address=91409"));
 
         if ($googleapi_settings->status == "REQUEST_DENIED") {
-            return UpgradeAdvisor::getState(false, "Your Google Maps API key came back with the following error. " . $googleapi_settings->error_message. " Please make sure you have the 'Google Maps Geocoding API' enabled and that the API key is entered properly and has no referer restrictions. You can check your key at the Google API console here: https://console.cloud.google.com/apis/");
+            return UpgradeAdvisor::getState(false, "Your Google Maps API key came back with the following error. " . $googleapi_settings->error_message . " Please make sure you have the 'Google Maps Geocoding API' enabled and that the API key is entered properly and has no referer restrictions. You can check your key at the Google API console here: https://console.cloud.google.com/apis/");
         }
 
         $timezone_settings = json_decode(get($GLOBALS['timezone_lookup_endpoint'] . "&location=34.2011137,-118.475058&timestamp=" . time()));
 
         if ($timezone_settings->status == "REQUEST_DENIED") {
-            return UpgradeAdvisor::getState(false, "Your Google Maps API key came back with the following error. " . $timezone_settings->errorMessage. " Please make sure you have the 'Google Time Zone API' enabled and that the API key is entered properly and has no referer restrictions. You can check your key at the Google API console here: https://console.cloud.google.com/apis/");
+            return UpgradeAdvisor::getState(false, "Your Google Maps API key came back with the following error. " . $timezone_settings->errorMessage . " Please make sure you have the 'Google Time Zone API' enabled and that the API key is entered properly and has no referer restrictions. You can check your key at the Google API console here: https://console.cloud.google.com/apis/");
         }
 
         require_once 'vendor/autoload.php';
@@ -236,7 +245,7 @@ class UpgradeAdvisor {
                 }
             }
 
-        } catch ( \Twilio\Exceptions\ConfigurationException $e ) {
+        } catch (\Twilio\Exceptions\ConfigurationException $e) {
             log_debug("Missing Twilio Credentials");
         }
 
@@ -256,7 +265,7 @@ class UpgradeAdvisor {
             try {
                 $conn = new PDO(sprintf("mysql:host=%s;dbname=%s", $GLOBALS['mysql_hostname'], $GLOBALS['mysql_database']), $GLOBALS['mysql_username'], $GLOBALS['mysql_password']);
             } catch (PDOException $e) {
-                return UpgradeAdvisor::getState( false, $e->getMessage());
+                return UpgradeAdvisor::getState(false, $e->getMessage());
             }
         }
 
@@ -265,7 +274,6 @@ class UpgradeAdvisor {
         }
     }
 }
-
 
 function checkBlacklist() {
     if (has_setting('blocklist') && strlen(setting('blocklist')) > 0 && isset($_REQUEST['Caller'])) {
