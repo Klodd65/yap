@@ -6,7 +6,7 @@ static $version = "2.5.2";
 static $settings_whitelist = [
     'blocklist' => [ 'description' => '' , 'default' => '', 'overridable' => true],
     'bmlt_root_server' => [ 'description' => '' , 'default' => '', 'overridable' => false],
-    'config' => [ 'description' => '' , 'default' => '', 'overridable' => true],
+    'config' => [ 'description' => '' , 'default' => null, 'overridable' => true],
     'custom_query' => ['description' => '', 'default' => '&sort_results_by_distance=1&long_val={LONGITUDE}&lat_val={LATITUDE}&geo_width={SETTING_MEETING_SEARCH_RADIUS}&weekdays={DAY}', 'overridable' => true],
     'fallback_number' => [ 'description' => '' , 'default' => '', 'overridable' => true],
     'gather_hints' => [ 'description' => '' , 'default' => '', 'overridable' => true],
