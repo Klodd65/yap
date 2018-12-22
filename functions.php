@@ -1097,7 +1097,7 @@ function getIvrResponse($redirected_from = null, $prior_digit = null, $expected_
     return $response;
 }
 
-// TODO: This should be replaced in Yap 3.x with utilizing a session store.
+// TODO: This should be replaced in 3.x with utilizing a session store.
 function getConfigFileOverrideString() {
     return has_setting("config") ? "&override_config=".setting("config") : "";
 }
