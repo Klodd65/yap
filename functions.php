@@ -1098,6 +1098,6 @@ function getIvrResponse($redirected_from = null, $prior_digit = null, $expected_
 }
 
 // TODO: This should be replaced in 3.x with utilizing a session store.
-function getConfigFileOverrideString() {
-    return has_setting("config") ? "&override_config=".setting("config") : "";
+function getConfigFileOverrideString($shouldUriEncode = false) {
+    return has_setting("config") ? ($shouldUriEncode ? "&amp;" : "&") . "override_config=" . setting("config") : "";
 }

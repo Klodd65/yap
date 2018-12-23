@@ -52,7 +52,7 @@
         <Say voice="<?php echo setting('voice'); ?>" language="<?php echo setting('language') ?>"><?php echo word('please_wait_while_we_connect_your_call') ?></Say>
         <Dial>
             <Conference waitUrl="<?php echo $serviceBodyConfiguration->moh_count == 1 ? $serviceBodyConfiguration->moh : "playlist.php?items=" . $serviceBodyConfiguration->moh?>"
-                        statusCallback="helpline-dialer.php?service_body_id=<?php echo $calculated_service_body_id ?>&amp;Caller=<?php echo $_REQUEST['Called'] ?>"
+                        statusCallback="helpline-dialer.php?service_body_id=<?php echo $calculated_service_body_id ?>&amp;Caller=<?php echo $_REQUEST['Called'] . getConfigFileOverrideString(true) ?>"
                         startConferenceOnEnter="false"
                         endConferenceOnExit="true"
                         statusCallbackMethod="GET"
@@ -71,7 +71,7 @@
                         input="dtmf"
                         timeout="15"
                         numDigits="1"
-                        action="helpline-search.php?CaptchaVerified=1&amp;ForceNumber=<?php echo urlencode($_REQUEST['ForceNumber'])?><?php echo $waiting_message ? "&amp;WaitingMessage=1" : "" ?>">
+                        action="helpline-search.php?CaptchaVerified=1&amp;ForceNumber=<?php echo urlencode($_REQUEST['ForceNumber']) . getConfigFileOverrideString(true) ?><?php echo $waiting_message ? "&amp;WaitingMessage=1" : "" ?>">
                     <Say voice="<?php echo setting('voice'); ?>" language="<?php echo setting('language') ?>">
                         <?php echo setting('title') ?>... <?php echo word( 'press_any_key_to_continue' ) ?>
                     </Say>
